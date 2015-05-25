@@ -69,4 +69,4 @@ ZYCORE_EXCEPTION_TYPE_FROM_TEMPLATE(RuntimeErrorTemplate, OutOfBounds   );
 
 } // namespace zycore
 
-#endif _ZYCORE_EXCEPTIONS_HPP_
+#endif // _ZYCORE_EXCEPTIONS_HPP_

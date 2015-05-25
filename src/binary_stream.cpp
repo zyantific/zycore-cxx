@@ -92,7 +92,7 @@ std::string IBinaryStream::hexDump(StreamOffs pos, size_t len) const
             ss << ' ';
 
             // Create ASCII dump
-            for (int k = 0; lastRound && k <= j || !lastRound && k < 16; ++k)
+            for (int k = 0; (lastRound && k <= j) || (!lastRound && k < 16); ++k)
             {
                 unsigned char chCur = m_buffer->data()[i - j + k];
                 ss << (isprint(chCur) ? static_cast<char>(chCur) : '.');

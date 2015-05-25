@@ -33,6 +33,7 @@
 #include <type_traits>
 #include <vector>
 #include <cassert>
+#include <string>
 
 namespace zycore
 {
@@ -187,9 +188,6 @@ public:
      * @return  This instance.
      */
     template<typename T> IBinaryStream& operator >> (T& data);
-    
-    /// @overload
-    template<typename T> const IBinaryStream& operator >> (T& data) const;
 
     /**
      * @brief   Reads data from the stream rawly.
@@ -413,14 +411,6 @@ const T* IBinaryStream::constPtr(StreamOffs pos) const
 
 template<typename T> inline
 IBinaryStream& IBinaryStream::operator >> (T& data)
-{
-    data = *constPtr<T>(m_rpos);
-    m_rpos += sizeof(T);
-    return *this;
-}
-
-template<typename T> inline
-const IBinaryStream& IBinaryStream::operator >> (T& data) const
 {
     data = *constPtr<T>(m_rpos);
     m_rpos += sizeof(T);

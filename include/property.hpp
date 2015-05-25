@@ -289,7 +289,7 @@ public:
 
 template<typename T>
 inline Property<T>::Property(ReflectableObject* owner, const std::string& name, T& member)
-    : PropertyImplementation(owner, name, member, 
+    : PropertyImplementation<T>(owner, name, member, 
         std::bind(&PropertyTemplatedBase<T>::defaultGetter, this), 
         std::bind(&PropertyTemplatedBase<T>::defaultSetter, this, std::placeholders::_1))
 {}
@@ -297,14 +297,14 @@ inline Property<T>::Property(ReflectableObject* owner, const std::string& name, 
 template<typename T>
 inline Property<T>::Property(ReflectableObject* owner, const std::string& name, T& member, 
         typename PropertyTemplatedBase<T>::Getter getter)
-    : PropertyImplementation(owner, name, member, getter, 
+    : PropertyImplementation<T>(owner, name, member, getter, 
         std::bind(&PropertyTemplatedBase<T>::defaultSetter, this, std::placeholders::_1))
 {}
 
 template<typename T>
 inline Property<T>::Property(ReflectableObject* owner, const std::string& name, T& member, 
         typename PropertyTemplatedBase<T>::Setter setter)
-    : PropertyImplementation(owner, name, member, 
+    : PropertyImplementation<T>(owner, name, member, 
         std::bind(&PropertyTemplatedBase<T>::defaultGetter, this), setter)
 {}
 
@@ -312,7 +312,7 @@ template<typename T>
 inline Property<T>::Property(ReflectableObject* owner, const std::string& name, T& member, 
         typename PropertyTemplatedBase<T>::Getter getter, 
         typename PropertyTemplatedBase<T>::Setter setter)
-    : PropertyImplementation(owner, name, member, getter, setter)
+    : PropertyImplementation<T>(owner, name, member, getter, setter)
 {}
 
 // ============================================================================================== //

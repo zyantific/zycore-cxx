@@ -28,6 +28,7 @@
 #include "exceptions.hpp"
 
 #include <algorithm>
+#include <string>
 
 namespace zycore
 {
