@@ -58,7 +58,7 @@ namespace internal
 // [OptionalImplBase]                                                                             //
 // ---------------------------------------------------------------------------------------------- //
 
-template<typename T>
+template<typename T, typename=void>
 class OptionalImplBase
 {
     bool m_hasValue;
@@ -248,12 +248,77 @@ public: // Observers
 };
 
 // ---------------------------------------------------------------------------------------------- //
+// [OptionalImplBase] for references (lvalue and rvalue)                                          //
+// ---------------------------------------------------------------------------------------------- //
+
+template<typename T>
+class OptionalImplBase<T, std::enable_if_t<std::is_reference<T>::value>>
+{
+    std::remove_reference_t<T>* m_value;
+public:
+    /**
+     * @copydoc OptionalImplBase<T>::OptionalImplBase()
+     */
+    OptionalImplBase()
+        : OptionalImplBase(kEmpty)
+    {}
+
+    /**
+     * @copydoc OptionalImplBase<T>::OptionalImplBase(Empty)
+     */
+    OptionalImplBase(Empty)
+        : m_value(nullptr)
+    {}
+
+    /**
+     * @brief   Constructs the optional with a reference-value.
+     */
+    OptionalImplBase(T ref)
+        : m_value(&ref)
+    {}
+
+    /**
+     * @copydoc OptionalImplBase<T>::~OptionalImplBase
+     */
+    ~OptionalImplBase() = default;
+
+    /**
+     * @copydoc OptionalImplBase<T>::hasValue
+     */
+    bool hasValue() const { return m_value != nullptr; }
+
+    /**
+     * @copydoc OptionalImplBase<T>::operator bool
+     */
+    operator bool () const { return hasValue(); }
+
+    /**
+     * @copydoc OptionalImplBase<T>::value
+     */
+    T value()
+    {
+        if (!m_value) utils::fatalExit("tried to retrieve value of Optional without value");
+        return *m_value;
+    }
+
+    /**
+     * @copydoc OptionalImplBase<T>::release
+     */
+    T release()
+    {
+        return value();
+    }
+};
+
+// ---------------------------------------------------------------------------------------------- //
 // [OptionalImpl] for non-copyable, non-movable types                                             //
 // ---------------------------------------------------------------------------------------------- //
 
-#define ZYCORE_OPTIONAL_FWD_INPLACE_CTORS                                                          \
+#define ZYCORE_OPTIONAL_FWD_EMPTY_CTORS                                                            \
     OptionalImpl() : OptionalImplBase<T>(kEmpty) /* MSVC12 requires parantheses here */ {}         \
-    OptionalImpl(Empty) : OptionalImplBase<T>(kEmpty) /* ^ */ {}                                   \
+    OptionalImpl(Empty) : OptionalImplBase<T>(kEmpty) /* ^ */ {}
+
+#define ZYCORE_OPTIONAL_FWD_INPLACE_CTOR                                                           \
     template<typename... ArgsT>                                                                    \
     OptionalImpl(InPlace, ArgsT... args) : OptionalImplBase<T>(kInPlace, args...) /* ^ */ {}
 
@@ -281,7 +346,8 @@ template<typename T, typename=void>
 struct OptionalImpl final
     : OptionalImplBase<T>
 {
-    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTOR
 };
 
 // ---------------------------------------------------------------------------------------------- //
@@ -292,7 +358,8 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<!IsCopyable<T>::value && IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTOR
     ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
 };
 
@@ -304,7 +371,8 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<IsCopyable<T>::value && !IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTOR
     ZYCORE_OPTIONAL_IMPL_COPY_CTORS
 };
 
@@ -316,12 +384,26 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<IsCopyable<T>::value && IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTOR
     ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
     ZYCORE_OPTIONAL_IMPL_COPY_CTORS
 };
 
-#undef ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+// ---------------------------------------------------------------------------------------------- //
+// [OptionalImpl] for references (lvalue and rvalue)                                              //
+// ---------------------------------------------------------------------------------------------- //
+
+template<typename T>
+struct OptionalImpl<T, std::enable_if_t<std::is_reference<T>::value>>
+     : OptionalImplBase<T>
+{
+    ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+    OptionalImpl(T ref) : OptionalImplBase<T>(ref) /* MSVC12 requires parantheses here */ {}
+};
+
+#undef ZYCORE_OPTIONAL_FWD_EMPTY_CTORS
+#undef ZYCORE_OPTIONAL_FWD_INPLACE_CTOR
 #undef ZYCORE_OPTIONAL_IMPL_COPY_CTORS
 #undef ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
 

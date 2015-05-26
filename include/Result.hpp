@@ -27,7 +27,7 @@
 #ifndef _ZYCORE_RESULT_HPP_
 #define _ZYCORE_RESULT_HPP_
 
-#include "optional.hpp"
+#include "Optional.hpp"
 
 namespace zycore
 {

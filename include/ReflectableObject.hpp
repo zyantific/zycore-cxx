@@ -28,6 +28,7 @@
 #define _ZYCORE_REFLECTABLEOBJECT_HPP_
 
 #include "SignalObject.hpp"
+#include "Optional.hpp"
 
 #include <mutex>
 
@@ -57,9 +58,9 @@ public: // Public interface.
     virtual ~ReflectableObject() = default;
     /**
      * @brief   Gets the object name.
-     * @return  The object name or @c std::string() if none is set.
+     * @return  The object name if one is set.
      */
-    const std::string& objectName() const;
+    Optional<const std::string&> objectName() const;
     /**
      * @brief   Sets the object name.
      * @param   name The new object name. May not be empty.

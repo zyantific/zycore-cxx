@@ -49,10 +49,10 @@ void ReflectableObject::setObjectName(const std::string& name)
     }
 }
 
-const std::string& ReflectableObject::objectName() const
+Optional<const std::string&> ReflectableObject::objectName() const
 {
-    static const std::string sharedEmptyName;
-    return m_objectName ? *m_objectName : sharedEmptyName;
+    if (m_objectName) return {*m_objectName};
+    return kEmpty;
 }
 
 void ReflectableObject::registerProperty(PropertyBase* prop)
