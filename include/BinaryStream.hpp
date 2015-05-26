@@ -5,23 +5,20 @@
  *
  * Copyright (c) 2015 Joel Höner (athre0z)
  * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
+ * and associated documentation files (the "Software"), to deal in the Software without restriction,
+ * including without limitation the rights to use, copy, modify, merge, publish, distribute, 
+ * sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
  * 
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in all copies or 
+ * substantial portions of the Software.
  * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING 
+ * BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND 
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, 
+ * DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
 #ifndef _ZYCORE_BINARYSTREAM_HPP_
@@ -30,7 +27,6 @@
 #include "Utils.hpp"
 #include "Exceptions.hpp"
 
-#include <type_traits>
 #include <vector>
 #include <cassert>
 #include <string>
@@ -62,6 +58,7 @@ public:
      * @param   buffer The buffer to work on.
      */
     BaseBinaryStream(Buffer *buffer);
+
     /**
      * @brief   Destructor.
      */
@@ -75,9 +72,8 @@ public:
 /**
  * @brief   Input stream for parsing binary data.
  * 
- * Reading data accesses perform boundary checks. All methods are guaranteed
- * to throw a @c NXOutOfBounds in case a requested read operation exceeds 
- * the managed buffer's boundaries.
+ * Reading data accesses perform boundary checks. All methods are guaranteed to throw a 
+ * @c OutOfBounds in case a requested read operation exceeds the managed buffer's boundaries.
  */
 class IBinaryStream : public virtual BaseBinaryStream
 {
@@ -86,8 +82,7 @@ protected:
 
     /**
      * @internal
-     * @brief   Validates if the given offset and length lie outside the
-     *          buffers boundaries.
+     * @brief   Validates if the given offset and length lie outside the buffers boundaries.
      * @param   offs    The offset to check
      * @param   len     The length to add.
      */
@@ -127,16 +122,14 @@ public:
     /**
      * @brief   Extracts an ANSI string from the buffer.
      * @param   pos             The position to start reading the string.
-     * @param   maxLen          The maximum length of the string.
-     *                          0 for infinite.
+     * @param   maxLen          The maximum length of the string. 0 for infinite.
      */
     std::string extractString8(StreamOffs pos = 0, StreamSize maxLen = 0) const;
         
     /**
      * @brief   Extracts a wide string from the buffer.
      * @param   pos             The position to start reading the string
-     * @param   maxLen          The maximum length of the string 
-     *                          (in characters). 0 for infinite.
+     * @param   maxLen          The maximum length of the string (in characters). 0 for infinite.
      */
     std::wstring extractString16(StreamOffs pos = 0, StreamSize maxLen = 0) const;
     
@@ -173,8 +166,7 @@ public:
     std::string hexDump() const;
 
     /**
-     * @brief   Retrieves a constant pointer of a location inside the 
-     *          buffer.
+     * @brief   Retrieves a constant pointer of a location inside the buffer.
      * @tparam  T       The pointer's type.
      * @param   pos     The position.
      * @return  The desired pointer.
@@ -208,10 +200,9 @@ public:
 /**
  * @brief   Output stream for binary data.
  *          
- * In case a write operation would exceed the buffer's size, the size is
- * automatically advanced to fit the new requirements. If an operation
- * would grow the buffer beyond it's @c max_size, a @c NXOutOfBounds 
- * exception will be raised.
+ * In case a write operation would exceed the buffer's size, the size is automatically advanced to 
+ * fit the new requirements. If an operation would grow the buffer beyond it's @c max_size, a 
+ * @c OutOfBounds exception will be raised.
  */
 class OBinaryStream : public virtual BaseBinaryStream
 {
@@ -221,8 +212,7 @@ protected:
 
     /**
      * @internal
-     * @brief   Grows the buffer if the given pos + len does not fit into
-     *          the buffer anymore.
+     * @brief   Grows the buffer if the given pos + len does not fit into the buffer anymore.
      * @param   pos The position.
      * @param   len The length.
      */
@@ -243,8 +233,8 @@ public:
      * @brief   Addition assignment operator.
      * @param   appendFrom  The buffer to append.
      * @return  This instance.
-     * The given buffer is appended to the end of the managed buffer,
-     * not at the current write offset.
+     * The given buffer is appended to the end of the managed buffer, not at the current write 
+     * offset.
      */
     OBinaryStream& operator += (const Buffer& appendFrom);
 
