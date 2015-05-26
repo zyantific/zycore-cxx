@@ -38,25 +38,25 @@ endif ()
 
 # Library
 set(headers
-    "include/binary_stream.hpp"
-    "include/exceptions.hpp"
-    "include/config.hpp"
-    "include/operators.hpp"
-    "include/optional.hpp"
-    "include/property.hpp"
-    "include/reflectable_object.hpp"
-    "include/signal.hpp"
-    "include/signal_object.hpp"
-    "include/singleton.hpp"
-    "include/tmp.hpp"
-    "include/types.hpp"
-    "include/type_traits.hpp"
-    "include/utils.hpp")
+    "include/BinaryStream.hpp"
+    "include/Exceptions.hpp"
+    "include/Config.hpp"
+    "include/Operators.hpp"
+    "include/Optional.hpp"
+    "include/Property.hpp"
+    "include/ReflectableObject.hpp"
+    "include/Signal.hpp"
+    "include/SignalObject.hpp"
+    "include/Singleton.hpp"
+    "include/Tmp.hpp"
+    "include/Types.hpp"
+    "include/TypeTraits.hpp"
+    "include/Utils.hpp")
 set(sources
-    "src/binary_stream.cpp"
-    "src/property.cpp"
-    "src/reflectable_object.cpp"
-    "src/signal_object.cpp")
+    "src/BinaryStream.cpp"
+    "src/Property.cpp"
+    "src/ReflectableObject.cpp"
+    "src/SignalObject.cpp")
 
 add_library("Zycore" ${headers} ${sources})
 include_directories("include")

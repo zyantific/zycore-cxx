@@ -27,7 +27,7 @@
 #ifndef _ZYCORE_SIGNAL_HPP_
 #define _ZYCORE_SIGNAL_HPP_
 
-#include "utils.hpp"
+#include "Utils.hpp"
 
 #include <map>
 #include <thread>

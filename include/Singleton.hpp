@@ -27,7 +27,7 @@
 #ifndef _ZYCORE_SINGLETON_HPP_
 #define _ZYCORE_SINGLETON_HPP_
 
-#include "utils.hpp"
+#include "Utils.hpp"
 
 // ============================================================================================== //
 // [Singleton]                                                                                    //

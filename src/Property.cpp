@@ -24,8 +24,8 @@
  * THE SOFTWARE.
  */
 
-#include "property.hpp"
-#include "reflectable_object.hpp"
+#include "Property.hpp"
+#include "ReflectableObject.hpp"
  
 #include <cassert>
 

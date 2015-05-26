@@ -24,8 +24,8 @@
  * THE SOFTWARE.
  */
 
-#include "reflectable_object.hpp"
-#include "exceptions.hpp"
+#include "ReflectableObject.hpp"
+#include "Exceptions.hpp"
 
 #include <algorithm>
 #include <string>

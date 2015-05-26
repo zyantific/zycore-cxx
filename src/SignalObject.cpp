@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-#include "signal_object.hpp"
+#include "SignalObject.hpp"
 
 #include <algorithm>
 

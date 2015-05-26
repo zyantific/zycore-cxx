@@ -27,7 +27,7 @@
 #ifndef _ZYCORE_SIGNALOBJECT_HPP_
 #define _ZYCORE_SIGNALOBJECT_HPP_
 
-#include "signal.hpp"
+#include "Signal.hpp"
 
 #include <vector>
 #include <mutex>

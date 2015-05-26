@@ -27,8 +27,8 @@
 #ifndef _ZYCORE_PROPERTY_HPP_
 #define _ZYCORE_PROPERTY_HPP_
 
-#include "reflectable_object.hpp"
-#include "exceptions.hpp"
+#include "ReflectableObject.hpp"
+#include "Exceptions.hpp"
 
 #include <string>
 #include <unordered_map>

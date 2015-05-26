@@ -27,9 +27,9 @@
 #ifndef _ZYCORE_OPERATORS_HPP_
 #define _ZYCORE_OPERATORS_HPP_
 
-#include "types.hpp"
-#include "type_traits.hpp"
-#include "config.hpp"
+#include "Types.hpp"
+#include "TypeTraits.hpp"
+#include "Config.hpp"
 
 namespace zycore
 {

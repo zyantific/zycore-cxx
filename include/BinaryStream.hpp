@@ -27,8 +27,8 @@
 #ifndef _ZYCORE_BINARYSTREAM_HPP_
 #define _ZYCORE_BINARYSTREAM_HPP_
 
-#include "utils.hpp"
-#include "exceptions.hpp"
+#include "Utils.hpp"
+#include "Exceptions.hpp"
 
 #include <type_traits>
 #include <vector>

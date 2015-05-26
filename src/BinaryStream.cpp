@@ -24,7 +24,7 @@
  * THE SOFTWARE.
  */
 
-#include "binary_stream.hpp"
+#include "BinaryStream.hpp"
 
 #include <sstream>
 #include <iomanip>

@@ -27,7 +27,7 @@
 #ifndef _ZYCORE_REFLECTABLEOBJECT_HPP_
 #define _ZYCORE_REFLECTABLEOBJECT_HPP_
 
-#include "signal_object.hpp"
+#include "SignalObject.hpp"
 
 #include <mutex>
 

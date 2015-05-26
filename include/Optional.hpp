@@ -27,8 +27,8 @@
 #ifndef _ZYCORE_OPTIONAL_HPP_
 #define _ZYCORE_OPTIONAL_HPP_
 
-#include "utils.hpp"
-#include "type_traits.hpp"
+#include "Utils.hpp"
+#include "TypeTraits.hpp"
 
 namespace zycore
 {
