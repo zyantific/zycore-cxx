@@ -27,6 +27,8 @@
 #ifndef _ZYCORE_TYPETRAITS_HPP_
 #define _ZYCORE_TYPETRAITS_HPP_
 
+#include "Types.hpp"
+
 #include <type_traits>
 
 namespace zycore

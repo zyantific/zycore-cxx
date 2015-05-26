@@ -251,13 +251,13 @@ public: // Observers
 // [OptionalImpl] for non-copyable, non-movable types                                             //
 // ---------------------------------------------------------------------------------------------- //
 
-#define REMODEL_OPTIONAL_FWD_INPLACE_CTORS                                                         \
+#define ZYCORE_OPTIONAL_FWD_INPLACE_CTORS                                                          \
     OptionalImpl() : OptionalImplBase<T>(kEmpty) /* MSVC12 requires parantheses here */ {}         \
     OptionalImpl(Empty) : OptionalImplBase<T>(kEmpty) /* ^ */ {}                                   \
     template<typename... ArgsT>                                                                    \
     OptionalImpl(InPlace, ArgsT... args) : OptionalImplBase<T>(kInPlace, args...) /* ^ */ {}
 
-#define REMODEL_OPTIONAL_IMPL_MOVE_CTORS                                                           \
+#define ZYCORE_OPTIONAL_IMPL_MOVE_CTORS                                                            \
     OptionalImpl(OptionalImpl&& other)                                                             \
         { this->moveConstruct(std::forward<OptionalImpl>(other)); }                                \
     OptionalImpl& operator = (OptionalImpl&& other)                                                \
@@ -267,7 +267,7 @@ public: // Observers
     OptionalImpl& operator = (T&& other)                                                           \
         { this->moveAssign(std::forward<T>(other)); return *this; }
 
-#define REMODEL_OPTIONAL_IMPL_COPY_CTORS                                                           \
+#define ZYCORE_OPTIONAL_IMPL_COPY_CTORS                                                            \
     OptionalImpl(const OptionalImpl& other)                                                        \
         { this->copyConstruct(other); }                                                            \
     OptionalImpl& operator = (const OptionalImpl& other)                                           \
@@ -281,7 +281,7 @@ template<typename T, typename=void>
 struct OptionalImpl final
     : OptionalImplBase<T>
 {
-    REMODEL_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
 };
 
 // ---------------------------------------------------------------------------------------------- //
@@ -292,8 +292,8 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<!IsCopyable<T>::value && IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    REMODEL_OPTIONAL_FWD_INPLACE_CTORS
-    REMODEL_OPTIONAL_IMPL_MOVE_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
 };
 
 // ---------------------------------------------------------------------------------------------- //
@@ -304,8 +304,8 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<IsCopyable<T>::value && !IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    REMODEL_OPTIONAL_FWD_INPLACE_CTORS
-    REMODEL_OPTIONAL_IMPL_COPY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_IMPL_COPY_CTORS
 };
 
 // ---------------------------------------------------------------------------------------------- //
@@ -316,14 +316,14 @@ template<typename T>
 struct OptionalImpl<T, std::enable_if_t<IsCopyable<T>::value && IsMovable<T>::value>>
      : OptionalImplBase<T>
 {
-    REMODEL_OPTIONAL_FWD_INPLACE_CTORS
-    REMODEL_OPTIONAL_IMPL_MOVE_CTORS
-    REMODEL_OPTIONAL_IMPL_COPY_CTORS
+    ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+    ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
+    ZYCORE_OPTIONAL_IMPL_COPY_CTORS
 };
 
-#undef REMODEL_OPTIONAL_FWD_INPLACE_CTORS
-#undef REMODEL_OPTIONAL_IMPL_COPY_CTORS
-#undef REMODEL_OPTIONAL_IMPL_MOVE_CTORS
+#undef ZYCORE_OPTIONAL_FWD_INPLACE_CTORS
+#undef ZYCORE_OPTIONAL_IMPL_COPY_CTORS
+#undef ZYCORE_OPTIONAL_IMPL_MOVE_CTORS
 
 } // namespace internal
 

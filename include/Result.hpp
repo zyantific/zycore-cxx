@@ -29,8 +29,6 @@
 
 #include "optional.hpp"
 
-#include <cassert>
-
 namespace zycore
 {
 
@@ -135,15 +133,17 @@ public:
      * @return  @c true if the operation succeded and thus this result has a result value but no
      *          error value, @c false if not.
      */
+    // Implementation capturing Result<ResultT, ErrorT> and Result<ResultT, void>
     template<typename ResultTT = ResultT, 
         std::enable_if_t<!std::is_void<ResultTT>::value, int> = 0>
-    // Implementation capturing Result<ResultT, ErrorT> and Result<ResultT, void>
     bool succeeded() const
     {
         return this->m_result.hasValue();
     }
     
-    /// @copydoc succeeded()
+    /**
+     * @copydoc succeeded()
+     */
     // Implementation capturing Result<void, ErrorT>. Case Result<void, void> is handled by 
     // a specialization of Result itself.
     template<typename ResultTT = ResultT, 
@@ -219,21 +219,33 @@ class Result<void, void> final
 {
     bool m_succeeded;
 public:
-    /// @copydoc Result::Result(Error, ...)
+    /**  
+     * @copydoc Result::Result(Error, ...)
+     */
     explicit Result(Error) 
         : m_succeeded(false) 
     {}
 
-    /// @copydoc Result::Result(...)
+    /**  
+     * @copydoc Result::Result(...)
+     */
     Result() 
         : m_succeeded(true) 
     {}
 public:
-    /// @copydoc Result::succeeded
+    /**  
+     * @copydoc Result::succeeded
+     */
     bool succeeded() const { return m_succeeded;  }
-    /// @copydoc Result::failed
+
+    /**  
+     * @copydoc Result::failed
+     */
     bool failed   () const { return !succeeded(); }
-    /// @copydoc Result::operator bool
+
+    /**  
+     * @copydoc Result::operator bool
+     */
     operator bool () const { return succeeded();  }
 };
 

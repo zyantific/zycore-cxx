@@ -49,6 +49,7 @@ set(headers
     "include/SignalObject.hpp"
     "include/Singleton.hpp"
     "include/Tmp.hpp"
+    "include/Result.hpp"
     "include/Types.hpp"
     "include/TypeTraits.hpp"
     "include/Utils.hpp")
