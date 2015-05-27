@@ -23,7 +23,7 @@
 
 #include "Property.hpp"
 #include "ReflectableObject.hpp"
- 
+
 #include <cassert>
 
 namespace zycore

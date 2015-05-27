@@ -25,7 +25,7 @@
 #define _ZYCORE_TYPETRAITS_HPP_
 
 #include "Types.hpp"
-#include "Tmp.hpp"
+#include "Mpl.hpp"
 
 #include <type_traits>
 
@@ -214,12 +214,12 @@ struct AnalyzeQualifiersImpl<T[N], LayerStackT>
  *      
  *      // Output:
  *      // BaseType: float
- *      // QualifierStack: struct TypeStack<int &,int * volatile,int const[42]>
+ *      // QualifierStack: struct mpl::Stack<int &,int * volatile,int const[42]>
  *      // Depth: 3
  * @endcode
  */
 template<typename T>
-using AnalyzeQualifiers = internal::AnalyzeQualifiersImpl<T, TypeStack<>>;
+using AnalyzeQualifiers = internal::AnalyzeQualifiersImpl<T, mpl::Stack<>>;
 
 // ============================================================================================== //
 // [CloneQualifiers]                                                                              //
