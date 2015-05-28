@@ -24,6 +24,10 @@
 #ifndef _ZYCORE_BINARYSTREAM_HPP_
 #define _ZYCORE_BINARYSTREAM_HPP_
 
+#ifdef ZYCORE_HEADER_ONLY
+#   error "This file cannot be used in header-only mode."
+#endif // ZYCORE_HEADER_ONLY
+
 #include "Utils.hpp"
 #include "Exceptions.hpp"
 

@@ -24,6 +24,10 @@
 #ifndef _ZYCORE_SIGNALOBJECT_HPP_
 #define _ZYCORE_SIGNALOBJECT_HPP_
 
+#ifdef ZYCORE_HEADER_ONLY
+#   error "This file cannot be used in header-only mode."
+#endif // ZYCORE_HEADER_ONLY
+
 #include "Signal.hpp"
 
 #include <vector>

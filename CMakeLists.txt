@@ -1,8 +1,9 @@
-cmake_minimum_required(VERSION 2.8.12)
+cmake_minimum_required(VERSION 3.0)
 
 project(Zycore)
 
 option(FORCE_SHARED_CRT "Forces shared linkage against the CRT" FALSE)
+option(HEADER_ONLY "Configure for header-only library usage" FALSE)
 
 if (NOT CONFIGURED_ONCE)
     if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
@@ -17,6 +18,10 @@ if (NOT CONFIGURED_ONCE)
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
     set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${compiler_specific}"
         CACHE STRING "Flags used by the compiler during all build types." FORCE)
+endif ()
+
+if (HEADER_ONLY)
+    add_definitions("-DZYCORE_HEADER_ONLY=1")
 endif ()
 
 # CMake always orders MSVC to build with a shared CRT. Hack CMake variables in order
@@ -59,7 +64,12 @@ set(sources
     "src/ReflectableObject.cpp"
     "src/SignalObject.cpp")
 
-add_library("Zycore" ${headers} ${sources})
-include_directories("include")
+if (HEADER_ONLY)
+    add_library("Zycore" INTERFACE)
+    target_include_directories("Zycore" INTERFACE "include/")
+else ()
+    add_library("Zycore" ${headers} ${sources})
+    include_directories("include/")
+endif ()
 
 set(CONFIGURED_ONCE TRUE CACHE INTERNAL "CMake has configured at least once.")
