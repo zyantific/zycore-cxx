@@ -146,8 +146,7 @@ struct AnalyzeQualifiersFinalImpl
 {
     using QualifierStack = LayerStackT;
     using BaseType = T;
-    using DepthType = typename LayerStackT::SizeType;
-    static const DepthType kDepth = LayerStackT::kSize;
+    static const std::size_t kDepth = LayerStackT::kSize;
 };
 
 // Plain type (+ CV)
