@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "ReflectableObject.hpp"
-#include "Exceptions.hpp"
+#include "zycore/ReflectableObject.hpp"
+#include "zycore/Exceptions.hpp"
 
 #include <algorithm>
 #include <string>

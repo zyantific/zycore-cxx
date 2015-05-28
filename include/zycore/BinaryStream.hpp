@@ -28,8 +28,8 @@
 #   error "This file cannot be used in header-only mode."
 #endif // ZYCORE_HEADER_ONLY
 
-#include "Utils.hpp"
-#include "Exceptions.hpp"
+#include "zycore/Utils.hpp"
+#include "zycore/Exceptions.hpp"
 
 #include <vector>
 #include <cassert>
@@ -48,7 +48,7 @@ namespace zycore
  * @see     OBinaryStream
  * @see     BinarySteam
  */
-class BaseBinaryStream : public utils::NonCopyable
+class BaseBinaryStream : public NonCopyable
 {
 public:
     using Buffer = std::vector<uint8_t>;

@@ -28,8 +28,8 @@
 #   error "This file cannot be used in header-only mode."
 #endif // ZYCORE_HEADER_ONLY
 
-#include "ReflectableObject.hpp"
-#include "Exceptions.hpp"
+#include "zycore/ReflectableObject.hpp"
+#include "zycore/Exceptions.hpp"
 
 #include <string>
 #include <unordered_map>
@@ -191,7 +191,7 @@ public: // Access to the reflected object using the property.
 template<typename T>
 class PropertyImplementation
 {
-    static_assert(utils::BlackBoxConsts<T>::kFalse, 
+    static_assert(BlackBoxConsts<T>::kFalse, 
         "no property specialization found for given type");
 };
 

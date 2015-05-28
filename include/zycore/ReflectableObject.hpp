@@ -28,8 +28,8 @@
 #   error "This file cannot be used in header-only mode."
 #endif // ZYCORE_HEADER_ONLY
 
-#include "SignalObject.hpp"
-#include "Optional.hpp"
+#include "zycore/SignalObject.hpp"
+#include "zycore/Optional.hpp"
 
 #include <mutex>
 

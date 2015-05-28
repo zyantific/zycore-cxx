@@ -28,7 +28,7 @@
 #   error "This file cannot be used in header-only mode."
 #endif // ZYCORE_HEADER_ONLY
 
-#include "Signal.hpp"
+#include "zycore/Signal.hpp"
 
 #include <vector>
 #include <mutex>
@@ -48,7 +48,7 @@ namespace zycore
  */
 class SignalObject 
     : public internal::SignalObjectBase
-    , public utils::NonCopyable
+    , public NonCopyable
 {
     std::recursive_mutex m_objectMutex;
     std::vector<std::tuple<SlotHandle, internal::SignalBase*>> m_connectedSignals;

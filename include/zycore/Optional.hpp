@@ -24,8 +24,8 @@
 #ifndef _ZYCORE_OPTIONAL_HPP_
 #define _ZYCORE_OPTIONAL_HPP_
 
-#include "Utils.hpp"
-#include "TypeTraits.hpp"
+#include "zycore/Utils.hpp"
+#include "zycore/TypeTraits.hpp"
 
 namespace zycore
 {
@@ -226,7 +226,7 @@ public: // Observers
      */
     T& value()
     {
-        if (!m_hasValue) utils::fatalExit("tried to retrieve value of Optional without value");
+        if (!m_hasValue) fatalExit("tried to retrieve value of Optional without value");
         return *ptr();
     }
 
@@ -294,7 +294,7 @@ public:
      */
     T value()
     {
-        if (!m_value) utils::fatalExit("tried to retrieve value of Optional without value");
+        if (!m_value) fatalExit("tried to retrieve value of Optional without value");
         return *m_value;
     }
 

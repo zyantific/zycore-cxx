@@ -24,7 +24,7 @@
 #ifndef _ZYCORE_SIGNAL_HPP_
 #define _ZYCORE_SIGNAL_HPP_
 
-#include "Utils.hpp"
+#include "zycore/Utils.hpp"
 
 #include <map>
 #include <thread>
@@ -143,7 +143,7 @@ private: // Implementation of private interface.
 template<typename Object, typename... ArgsT>
 class ClassFuncConnection
     : public ConnectionBase<ArgsT...>
-    , public utils::NonCopyable
+    , public NonCopyable
 {
     using Member = void(Object::*)(ArgsT... args);
     Object* m_obj;
@@ -176,7 +176,7 @@ private: // Implementation of private interface.
 template<typename... ArgsT>
 class Signal 
     : public internal::SignalBase
-    , public utils::NonCopyable
+    , public NonCopyable
 {
     // Typedefs and private member-variables  
     using ConnectionBase = ConnectionBase<ArgsT...>;

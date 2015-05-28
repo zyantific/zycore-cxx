@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#include "Property.hpp"
-#include "ReflectableObject.hpp"
+#include "zycore/Property.hpp"
+#include "zycore/ReflectableObject.hpp"
 
 #include <cassert>
 

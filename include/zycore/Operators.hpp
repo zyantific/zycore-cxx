@@ -24,9 +24,9 @@
 #ifndef _ZYCORE_OPERATORS_HPP_
 #define _ZYCORE_OPERATORS_HPP_
 
-#include "Types.hpp"
-#include "TypeTraits.hpp"
-#include "Config.hpp"
+#include "zycore/Types.hpp"
+#include "zycore/TypeTraits.hpp"
+#include "zycore/Config.hpp"
 
 namespace zycore
 {
@@ -440,8 +440,6 @@ struct Comma : virtual Proxy<WrapperT, WrappedT>
 // ---------------------------------------------------------------------------------------------- //
 // [ForwardByFlags]                                                                               //
 // ---------------------------------------------------------------------------------------------- //
-
-using utils::InheritIfFlags;
 
 /**
  * @brief   Forwards operators depending selected by flags.

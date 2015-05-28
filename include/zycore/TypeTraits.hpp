@@ -24,8 +24,8 @@
 #ifndef _ZYCORE_TYPETRAITS_HPP_
 #define _ZYCORE_TYPETRAITS_HPP_
 
-#include "Types.hpp"
-#include "Mpl.hpp"
+#include "zycore/Types.hpp"
+#include "zycore/Mpl.hpp"
 
 #include <type_traits>
 
@@ -207,7 +207,7 @@ struct AnalyzeQualifiersImpl<T[N], LayerStackT>
  * 
  * Example:
  * @code
- *      using Result = utils::AnalyzeQualifiers<float const (*volatile &) [42]>;
+ *      using Result = AnalyzeQualifiers<float const (*volatile &) [42]>;
  *      std::cout << "BaseType: " << typeid(Result::BaseType).name() << std::endl;
  *      std::cout << "QualifierStack: " << typeid(Result::QualifierStack).name() << std::endl;
  *      std::cout << "Depth: " << static_cast<Result::DepthType>(Result::kDepth) << std::endl;

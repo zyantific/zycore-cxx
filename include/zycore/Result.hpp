@@ -24,7 +24,7 @@
 #ifndef _ZYCORE_RESULT_HPP_
 #define _ZYCORE_RESULT_HPP_
 
-#include "Optional.hpp"
+#include "zycore/Optional.hpp"
 
 namespace zycore
 {
@@ -178,7 +178,7 @@ public:
     template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultT>::value, int> = 0>
     ResultT& result()
     {
-        if (!succeeded()) utils::fatalExit("attempt to obtain result of result in error state");
+        if (!succeeded()) fatalExit("attempt to obtain result of result in error state");
         return this->m_result.value();
     }
 
@@ -189,7 +189,7 @@ public:
     template<typename ErrorTT = ErrorT, std::enable_if_t<!std::is_void<ErrorTT>::value, int> = 0>
     ErrorT& error()
     {
-        if (!failed()) utils::fatalExit("attempt to obtain error of result in success state");
+        if (!failed()) fatalExit("attempt to obtain error of result in success state");
         return this->m_error.value();
     }
 
