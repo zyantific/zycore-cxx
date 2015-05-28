@@ -43,21 +43,21 @@ endif ()
 
 # Library
 set(headers
-    "include/BinaryStream.hpp"
-    "include/Exceptions.hpp"
-    "include/Config.hpp"
-    "include/Operators.hpp"
-    "include/Optional.hpp"
-    "include/Property.hpp"
-    "include/ReflectableObject.hpp"
-    "include/Signal.hpp"
-    "include/SignalObject.hpp"
-    "include/Singleton.hpp"
-    "include/Mpl.hpp"
-    "include/Result.hpp"
-    "include/Types.hpp"
-    "include/TypeTraits.hpp"
-    "include/Utils.hpp")
+    "include/zycore/BinaryStream.hpp"
+    "include/zycore/Exceptions.hpp"
+    "include/zycore/Config.hpp"
+    "include/zycore/Operators.hpp"
+    "include/zycore/Optional.hpp"
+    "include/zycore/Property.hpp"
+    "include/zycore/ReflectableObject.hpp"
+    "include/zycore/Signal.hpp"
+    "include/zycore/SignalObject.hpp"
+    "include/zycore/Singleton.hpp"
+    "include/zycore/Mpl.hpp"
+    "include/zycore/Result.hpp"
+    "include/zycore/Types.hpp"
+    "include/zycore/TypeTraits.hpp"
+    "include/zycore/Utils.hpp")
 set(sources
     "src/BinaryStream.cpp"
     "src/Property.cpp"
