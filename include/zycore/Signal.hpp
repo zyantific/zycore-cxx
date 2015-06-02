@@ -90,7 +90,7 @@ public: // Public interface.
      * @brief   Calls the connected slot.
      * @param   args The arguments.
      */
-    virtual void call(ArgsT... args) const = 0;
+    virtual void call(ArgsT&&... args) const = 0;
 private: // Private interface.
     /**
      * @brief   Called when connection is destroyed.
@@ -124,7 +124,7 @@ public: // Implementation of public, virtual member-functions.
      * @brief   Calls the slot.
      * @param   args  Arguments.
      */
-    virtual void call(ArgsT... args) const override;
+    virtual void call(ArgsT&&... args) const override;
 private:
     Function m_func;
 private: // Implementation of private interface.
@@ -157,7 +157,7 @@ public: // Constructor
      */
     ClassFuncConnection(Object *obj, Member member, internal::SignalBase* sig, SlotHandle handle);
 public: // Implementation of public interface.
-    void call(ArgsT... args) const override;
+    void call(ArgsT&&... args) const override;
 private: // Implementation of private interface.
     void onDestroy(SlotHandle handle) override;
 };
@@ -212,12 +212,12 @@ public: // Public interface.
      * @brief   Emits the signal and calls all connected slots.
      * @param   args  Arguments to be passed to the slots.
      */
-    void emit(ArgsT... args) const;
+    void emit(ArgsT&&... args) const;
 
     /**
      * @brief   Shorthand for @c emit.
      */
-    void operator () (ArgsT... args) const;
+    void operator () (ArgsT&&... args) const;
 
     /**
      * @brief   Shorthand for @c connect.
@@ -274,9 +274,9 @@ inline FuncConnection<ArgsT...>::FuncConnection(Function func)
 {}
 
 template<typename... ArgsT>
-inline void FuncConnection<ArgsT...>::call(ArgsT... args) const
+inline void FuncConnection<ArgsT...>::call(ArgsT&&... args) const
 {
-    m_func(args...);
+    m_func(std::forward<ArgsT>(args)...);
 }
 
 // ============================================================================================== //
@@ -293,9 +293,9 @@ inline ClassFuncConnection<Object, ArgsT...>::ClassFuncConnection(
 }
 
 template<typename Object, typename... ArgsT>
-inline void ClassFuncConnection<Object, ArgsT...>::call(ArgsT... args) const
+inline void ClassFuncConnection<Object, ArgsT...>::call(ArgsT&&... args) const
 {
-    (m_obj->*m_member)(args...);
+    (m_obj->*m_member)(std::forward<ArgsT>(args)...);
 }
 
 template<typename Object, typename... ArgsT>
@@ -340,19 +340,19 @@ inline void Signal<ArgsT...>::connect(typename FuncConnection<ArgsT...>::Functio
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::emit(ArgsT... args) const
+inline void Signal<ArgsT...>::emit(ArgsT&&... args) const
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     for (const auto &cur : m_slots)
     {
-        cur.second->call(args...);
+        cur.second->call(std::forward<ArgsT>(args)...);
     }
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::operator()(ArgsT... args) const
+inline void Signal<ArgsT...>::operator()(ArgsT&&... args) const
 {
-    emit(args...);
+    emit(std::forward<ArgsT>(args)...);
 }
 
 template<typename... ArgsT>

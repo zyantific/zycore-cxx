@@ -408,10 +408,12 @@ struct ArraySubscript : virtual Proxy<WrapperT, WrappedT>
 template<typename WrapperT, typename WrappedT>
 struct Call : virtual Proxy<WrapperT, WrappedT>
 {
-    template<typename... argsT>
-    auto operator () (argsT... args)
+    template<typename... ArgsT>
+    auto operator () (ArgsT&&... args)
         -> ZYCORE_DECLTYPE_AUTO_WA(
-            std::declval<Proxy<WrapperT ZYCORE_COMMA WrappedT>>().valueRef()(args...)
+            std::declval<Proxy<WrapperT ZYCORE_COMMA WrappedT>>().valueRef()(
+                std::forward<ArgsT>(args)...
+                )
             )
     {
         return this->valueRef()(args...);
