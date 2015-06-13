@@ -26,6 +26,9 @@
 
 #include "zycore/Utils.hpp"
 
+namespace zycore
+{
+
 // ============================================================================================== //
 // [Singleton]                                                                                    //
 // ============================================================================================== //
@@ -75,7 +78,10 @@ template<typename ObjTypeT>
 inline ObjTypeT& Singleton<ObjTypeT>::instance()
 {
     if (!m_obj)
+    {
         m_obj = new ObjTypeT;
+    }
+
     return *m_obj;
 }
 
@@ -96,5 +102,7 @@ inline bool Singleton<ObjTypeT>::hasInstance()
 }
 
 // ============================================================================================== //
+
+} // namespace zycore
 
 #endif // _ZYCORE_SINGLETON_HPP_
