@@ -39,12 +39,10 @@
 // ============================================================================================== //
 
 #ifdef ZYCORE_DEBUG
-    #define ZYCORE_WIDEN2(x) L ## x
-    #define ZYCORE_WIDEN(x) ZYCORE_WIDEN2(x)
     #define ZYCORE_RAISE(class, ...)                                                               \
-        throw class(__VA_ARGS__, ZYCORE_WIDEN(__FILE__), __LINE__);
+        throw class(__VA_ARGS__, __FILE__, __LINE__);
     #define ZYCORE_FATAL_EXIT(class, ...)                                                          \
-        class(__VA_ARGS__, ZYCORE_WIDEN(__FILE__), __LINE__).fatalExit();
+        class(__VA_ARGS__, __FILE__, __LINE__).fatalExit();
 #else
     #define ZYCORE_RAISE(class, ...)                                                               \
         throw class(__VA_ARGS__, "", 0);
