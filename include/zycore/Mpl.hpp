@@ -24,6 +24,8 @@
 #ifndef _ZYCORE_TMP_HPP_
 #define _ZYCORE_TMP_HPP_
 
+#include <type_traits>
+
 namespace zycore
 {
 namespace mpl
