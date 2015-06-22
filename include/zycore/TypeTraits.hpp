@@ -134,6 +134,42 @@ struct IsCopyable
 {};
 
 // ============================================================================================== //
+// [IsAnyOf]                                                                                      //
+// ============================================================================================== //
+
+namespace internal
+{
+    struct IsAnyOfImplTrue
+    {
+        static const bool kValue = true;
+    };
+
+    template<typename ComperandT, typename OthersT>
+    struct IsAnyOfImpl
+    {
+        static const bool kValue = std::conditional_t<
+            std::is_same<ComperandT, OthersT::Top>::value,
+            IsAnyOfImplTrue,
+            IsAnyOfImpl<ComperandT, OthersT::PopFront>
+        >::kValue;
+    };
+
+    template<typename ComperandT>
+    struct IsAnyOfImpl<ComperandT, mpl::Vector<>>
+    {
+        static const bool kValue = false;
+    };
+}
+
+/**
+ * @brief   Determines if a type is one of one or more other types.
+ * @tparam  ComperandT  The type whose existence in the list should be checked.
+ * @tparam  OthersT     The list of types to check @c ComperandT against.
+ */
+template<typename ComperandT, typename... OthersT>
+using IsAnyOf = internal::IsAnyOfImpl<ComperandT, mpl::Vector<OthersT...>>;
+
+// ============================================================================================== //
 // [AnalyzeQualifiers]                                                                            //
 // ============================================================================================== //
 
