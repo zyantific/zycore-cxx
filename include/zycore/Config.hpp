@@ -4,6 +4,7 @@
  * The MIT License (MIT)
  *
  * Copyright (c) 2015 Joel Höner (athre0z)
+ * Copyright (c) 2015 Florian Bernd
  * 
  * Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  * and associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -47,7 +48,7 @@
 // ============================================================================================== //
 
 #if defined(_WIN32)
-#   define ZYCORE_WIN32
+#   define ZYCORE_WINDOWS
 #elif defined(__APPLE__)
 #   define ZYCORE_APPLE
 #   define ZYCORE_POSIX
@@ -59,6 +60,38 @@
 #   define ZYCORE_POSIX
 #elif defined(__posix)
 #   define ZYCORE_POSIX
+#else
+#   error "Unsupported platform detected"
+#endif
+
+// ============================================================================================== //
+// Architecture detection                                                                         //
+// ============================================================================================== //
+
+#if defined (_M_AMD64) || defined (__x86_64__)
+#   define ZYCORE_X64
+#elif defined (_M_IX86) || defined (__i386__)
+#   define ZYCORE_X86
+#else
+#   error "Unsupported platform detected"
+#endif
+
+// ============================================================================================== //
+// Debug/Release config detection                                                                 //
+// ============================================================================================== //  
+
+#if defined(ZYCORE_MSVC)
+#   ifdef _DEBUG
+#       define ZYCORE_DEBUG
+#   else
+#       define ZYCORE_RELEASE
+#   endif
+#elif defined(ZYCORE_GNUC) || defined(ZYCORE_ICC)
+#   ifdef NDEBUG
+#       define ZYCORE_RELEASE
+#   else
+#       define ZYCORE_DEBUG
+#   endif
 #else
 #   error "Unsupported platform detected"
 #endif
