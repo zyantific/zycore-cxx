@@ -231,6 +231,16 @@ public: // Observers
     }
 
     /**
+     * @brief   Gets the constant value.
+     * @copydetails value
+     */
+    const T& value() const
+    {
+        if (!m_hasValue) fatalExit("tried to retrieve value of Optional without value");
+        return *ptr();
+    }
+
+    /**
      * @brief   Releases the value from the optional, leaving behind an empty optional.
      * @return  The value.
      * @warning When called on optional without value, the behaviour is undefined.
@@ -297,7 +307,7 @@ public:
         if (!m_value) fatalExit("tried to retrieve value of Optional without value");
         return *m_value;
     }
-
+    
     /**
      * @copydoc OptionalImplBase<T>::release
      */
