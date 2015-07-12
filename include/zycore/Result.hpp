@@ -53,8 +53,8 @@ protected:
     Optional<ResultT> m_result;
 
     template<typename... ArgsT>
-    explicit ResultResultValueHolder(ArgsT... args)
-        : m_result(std::forward<ArgsT...>(args...))
+    explicit ResultResultValueHolder(ArgsT&&... args)
+        : m_result(std::forward<ArgsT>(args)...)
     {}
 };
 
@@ -62,7 +62,8 @@ template<>
 class ResultResultValueHolder<void>
 {
 protected:
-    ResultResultValueHolder() = default;
+    ResultResultValueHolder(InPlace) {}
+    ResultResultValueHolder(Empty) {}
 };
 
 template<typename ResultT>
@@ -72,8 +73,8 @@ protected:
     Optional<ResultT> m_error;
 
     template<typename... ArgsT>
-    explicit ResultErrorValueHolder(ArgsT... args)
-        : m_error(std::forward<ArgsT...>(args...))
+    explicit ResultErrorValueHolder(ArgsT&&... args)
+        : m_error(std::forward<ArgsT>(args)...)
     {}
 };
 
@@ -81,7 +82,8 @@ template<>
 class ResultErrorValueHolder<void>
 {
 protected:
-    ResultErrorValueHolder() = default;
+    ResultErrorValueHolder(InPlace) {}
+    ResultErrorValueHolder(Empty) {}
 };
 
 } // namespace internal
@@ -94,7 +96,7 @@ protected:
  * @brief   Class representing either failure or success, optionally holding either an operation
  *          result or an error descriptor.
  * @tparam  ResultT Type of the result.
- * @tparam  ErrorT  Type of the error t.
+ * @tparam  ErrorT  Type of the error.
  */
 template<typename ResultT = void, typename ErrorT = void>
 class Result final
@@ -109,9 +111,9 @@ public:
      * @param   args    Arguments passed to the constructor of the error value.
      */
     template<typename... ArgsT>
-    explicit Result(Error, ArgsT... args) 
+    Result(Error, ArgsT&&... args) 
         : internal::ResultResultValueHolder<ResultT>(kEmpty)
-        , internal::ResultErrorValueHolder<ErrorT>(kInPlace, std::forward<ArgsT...>(args...))
+        , internal::ResultErrorValueHolder<ErrorT>(kInPlace, std::forward<ArgsT>(args)...)
     {}
 
     /**
@@ -120,8 +122,8 @@ public:
      * @param   args    Arguments passed to the constructor of the result value.
      */
     template<typename... ArgsT>
-    explicit Result(ArgsT... args)
-        : internal::ResultResultValueHolder<ResultT>(kInPlace, std::forward<ArgsT...>(args...))
+    Result(ArgsT&&... args)
+        : internal::ResultResultValueHolder<ResultT>(kInPlace, std::forward<ArgsT>(args)...)
         , internal::ResultErrorValueHolder<ErrorT>(kEmpty)
     {}
 public:
@@ -131,8 +133,7 @@ public:
      *          error value, @c false if not.
      */
     // Implementation capturing Result<ResultT, ErrorT> and Result<ResultT, void>
-    template<typename ResultTT = ResultT, 
-        std::enable_if_t<!std::is_void<ResultTT>::value, int> = 0>
+    template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultTT>::value, int> = 0>
     bool succeeded() const
     {
         return this->m_result.hasValue();
@@ -175,8 +176,8 @@ public:
      * @warning Attepmt to obtain the result value of results in error state is undefined 
      *          behaviour. Doing so will terminate the application.
      */
-    template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultT>::value, int> = 0>
-    ResultT& result()
+    template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultTT>::value, int> = 0>
+    ResultTT& result()
     {
         if (!succeeded()) fatalExit("attempt to obtain result of result in error state");
         return this->m_result.value();
@@ -187,7 +188,7 @@ public:
      * @return  An ErrorT&amp;
      */
     template<typename ErrorTT = ErrorT, std::enable_if_t<!std::is_void<ErrorTT>::value, int> = 0>
-    ErrorT& error()
+    ErrorTT& error()
     {
         if (!failed()) fatalExit("attempt to obtain error of result in success state");
         return this->m_error.value();
@@ -197,8 +198,8 @@ public:
      * @brief   Convenience operator equivalent to @result.
      * @copydetails result
      */
-    template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultT>::value, int> = 0>
-    explicit operator ResultT& ()
+    template<typename ResultTT = ResultT, std::enable_if_t<!std::is_void<ResultTT>::value, int> = 0>
+    explicit operator ResultTT& ()
     {
         return result();
     }
