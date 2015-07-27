@@ -90,7 +90,7 @@ public: // Public interface.
      * @brief   Calls the connected slot.
      * @param   args The arguments.
      */
-    virtual void call(ArgsT&&... args) const = 0;
+    virtual void call(ArgsT... args) const = 0;
 private: // Private interface.
     /**
      * @brief   Called when connection is destroyed.
@@ -113,7 +113,6 @@ class FuncConnection
 {
 public:
     using Function = std::function<void(ArgsT... args)>;
-
     /**
      * @brief   Constructor.
      * @param   func The slot to be connected.
@@ -124,7 +123,7 @@ public: // Implementation of public, virtual member-functions.
      * @brief   Calls the slot.
      * @param   args  Arguments.
      */
-    virtual void call(ArgsT&&... args) const override;
+    virtual void call(ArgsT... args) const override;
 private:
     Function m_func;
 private: // Implementation of private interface.
@@ -132,35 +131,62 @@ private: // Implementation of private interface.
 };
 
 // ============================================================================================== //
-// [ClassFuncConnection]                                                                          //
+// [LifetimedConnection]                                                                          //
 // ============================================================================================== //
 
 /**
- * @brief   Connection between an object's method and a signal.
- * @tparam  Object  The slot's class type.
+ * @brief   Connection automatically loosened when either the signal or the lifetime-giving objects
+ *          is destoyed.
  * @tparam  ArgsT   The slot's member function argument types.
  */
-template<typename Object, typename... ArgsT>
-class ClassFuncConnection
+template<typename... ArgsT>
+class LifetimedConnection
     : public ConnectionBase<ArgsT...>
     , public NonCopyable
 {
-    using Member = void(Object::*)(ArgsT... args);
-    Object* m_obj;
-    Member m_member;
+public:
+    using Function = std::function<void(ArgsT...)>;
+private:
+    Function m_func;
+    internal::SignalObjectBase* m_lifetimeObject;
 public: // Constructor
     /**
      * @brief   Constructor.
-     * @param   obj     The object.
-     * @param   member  The member function.
+     * @param   obj     The object whose lifetime to bind to.
+     * @param   func    The callback function.
+     * @param   sig     The signal to connect to.
      * @param   handle  The slot handle.
      */
-    ClassFuncConnection(Object *obj, Member member, internal::SignalBase* sig, SlotHandle handle);
+    LifetimedConnection(internal::SignalObjectBase *obj, Function func, 
+        internal::SignalBase* sig, SlotHandle handle);
 public: // Implementation of public interface.
-    void call(ArgsT&&... args) const override;
+    void call(ArgsT... args) const override;
 private: // Implementation of private interface.
     void onDestroy(SlotHandle handle) override;
 };
+
+// ============================================================================================== //
+// [internal::MemberFuncBinding]                                                                  //
+// ============================================================================================== //
+
+namespace internal
+{
+
+/**
+ * @brief   Binds @c this to a member-function without the need of placeholders.
+ */
+template<typename ObjectT, typename... ArgsT>
+class MemberFuncBinding
+{
+    using Member = void (ObjectT::*)(ArgsT...);
+    ObjectT* m_obj;
+    Member m_member;
+public:
+    MemberFuncBinding(ObjectT* obj, Member memberFunc);
+    void operator() (ArgsT... args);
+};
+
+} // namespace internal
 
 // ============================================================================================== //
 // [Signal]                                                                                       //
@@ -180,7 +206,6 @@ class Signal
 {
     // Typedefs and private member-variables  
     using ConnectionBase = ConnectionBase<ArgsT...>;
-
     std::map<SlotHandle, ConnectionBase*> m_slots;
     SlotHandle m_IdCtr;
     mutable std::recursive_mutex m_mutex;
@@ -212,12 +237,12 @@ public: // Public interface.
      * @brief   Emits the signal and calls all connected slots.
      * @param   args  Arguments to be passed to the slots.
      */
-    void emit(ArgsT&&... args) const;
+    void emit(ArgsT... args) const;
 
     /**
      * @brief   Shorthand for @c emit.
      */
-    void operator () (ArgsT&&... args) const;
+    void operator () (ArgsT... args) const;
 
     /**
      * @brief   Shorthand for @c connect.
@@ -231,31 +256,43 @@ public: // Public interface.
      * @param   connection The connection to be added. Ownership is transfered.
      */
     template<typename Object>
-    void connect(ClassFuncConnection<Object, ArgsT...>* connection)
+    void connect(LifetimedConnection<Object, ArgsT...>* connection)
     {
         std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        m_slots.emplace(m_IdCtr++, static_cast<ConnectionBase*>(connection));
+        m_slots.emplace(m_IdCtr++, connection);
     }
 
     /**
-     * @brief   Connects a given slot to the signal.
+     * @brief   Connects a function to the signal binding the connection lifetime to a 
+     *          signal object.
+     * @param   object The object to be connected.
+     * @param	member The member function.
+     *                 
+     * The connection is automatically released as soon as either the signal or the
+     * lifetime-giver is destroyed.
+     */
+    void connect(SignalObject* lifetimeGiver, std::function<void(ArgsT...)> func)
+    {
+        std::lock_guard<std::recursive_mutex> lock(m_mutex);
+        SlotHandle handle = m_IdCtr++;
+        m_slots.emplace(handle, new LifetimedConnection<ArgsT...>(
+            lifetimeGiver, func, this, handle));
+    }
+
+    /**
+     * @brief   Connects a member-function slot to the signal.
      * @param   object The object to be connected.
      * @param	member The member function.
      *                 
      * The connection is automatically released as soon as either the signal or the object
      * with the slot is destroyed.
      */
-    template<typename Object>
-    void connect(Object* object, void(Object::*member)(ArgsT...))
+    template<typename ObjectT>
+    void connect(ObjectT* object, void(ObjectT::*member)(ArgsT...))
     {
-        static_assert(std::is_base_of<SignalObject, Object>::value,
+        static_assert(std::is_base_of<SignalObject, ObjectT>::value,
             "type has to be derived from SignalObject");
-
-        std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        SlotHandle handle = m_IdCtr++;
-        auto connection = new ClassFuncConnection<Object, ArgsT...>(
-            object, member, static_cast<internal::SignalBase*>(this), handle);
-        m_slots.emplace(handle, static_cast<ConnectionBase*>(connection));
+        connect(object, internal::MemberFuncBinding<ObjectT, ArgsT...>(object, member));
     }
 private: // Interface for SignalObject.
     /**
@@ -274,35 +311,56 @@ inline FuncConnection<ArgsT...>::FuncConnection(Function func)
 {}
 
 template<typename... ArgsT>
-inline void FuncConnection<ArgsT...>::call(ArgsT&&... args) const
+inline void FuncConnection<ArgsT...>::call(ArgsT... args) const
 {
-    m_func(std::forward<ArgsT>(args)...);
+    m_func(args...);
 }
 
 // ============================================================================================== //
-// Implementation of inline methods [ClassFuncConnection]                                         //
+// Implementation of inline methods [LifetimedConnection]                                         //
 // ============================================================================================== //
 
-template<typename Object, typename... ArgsT>
-inline ClassFuncConnection<Object, ArgsT...>::ClassFuncConnection(
-    Object* obj, Member member, internal::SignalBase* sig, SlotHandle handle)
+template<typename... ArgsT>
+inline LifetimedConnection<ArgsT...>::LifetimedConnection(internal::SignalObjectBase *lifetimeObj, 
+        Function func, internal::SignalBase* sig, SlotHandle handle)
+    : m_lifetimeObject(lifetimeObj)
+    , m_func(func)
+{
+    lifetimeObj->onSignalConnected(sig, handle);
+}
+
+template<typename... ArgsT>
+inline void LifetimedConnection<ArgsT...>::call(ArgsT... args) const
+{
+    m_func(args...);
+}
+
+template<typename... ArgsT>
+inline void LifetimedConnection<ArgsT...>::onDestroy(SlotHandle handle)
+{
+    m_lifetimeObject->onSignalDisconnected(handle);
+}
+
+// ============================================================================================== //
+// Implementation of inline functions [internal::MemberFuncBinding]                               //
+// ============================================================================================== //
+
+namespace internal
+{
+
+template<typename ObjectT, typename... ArgsT>
+inline MemberFuncBinding<ObjectT, ArgsT...>::MemberFuncBinding(ObjectT* obj, Member memberFunc)
     : m_obj(obj)
-    , m_member(member)
+    , m_member(memberFunc)
+{}
+
+template<typename ObjectT, typename... ArgsT>
+inline void MemberFuncBinding<ObjectT, ArgsT...>::operator() (ArgsT... args)
 {
-    static_cast<internal::SignalObjectBase*>(obj)->onSignalConnected(sig, handle);
+    (m_obj->*m_member)(args...);
 }
 
-template<typename Object, typename... ArgsT>
-inline void ClassFuncConnection<Object, ArgsT...>::call(ArgsT&&... args) const
-{
-    (m_obj->*m_member)(std::forward<ArgsT>(args)...);
-}
-
-template<typename Object, typename... ArgsT>
-inline void ClassFuncConnection<Object, ArgsT...>::onDestroy(SlotHandle handle)
-{
-    static_cast<internal::SignalObjectBase*>(m_obj)->onSignalDisconnected(handle);
-}
+} // namespace internal
 
 // ============================================================================================== //
 // Implementation of inline functions [Signal]                                                    //
@@ -328,7 +386,7 @@ template<typename... ArgsT>
 inline void Signal<ArgsT...>::connect(FuncConnection<ArgsT...>* connection)
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    m_slots.emplace(m_IdCtr++, static_cast<ConnectionBase*>(connection));
+    m_slots.emplace(m_IdCtr++, connection);
 }
 
 template<typename... ArgsT>
@@ -336,23 +394,23 @@ inline void Signal<ArgsT...>::connect(typename FuncConnection<ArgsT...>::Functio
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     auto connection = new FuncConnection<ArgsT...>(func);
-    m_slots.emplace(m_IdCtr++, static_cast<ConnectionBase*>(connection));
+    m_slots.emplace(m_IdCtr++, connection);
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::emit(ArgsT&&... args) const
+inline void Signal<ArgsT...>::emit(ArgsT... args) const
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     for (const auto &cur : m_slots)
     {
-        cur.second->call(std::forward<ArgsT>(args)...);
+        cur.second->call(args...);
     }
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::operator()(ArgsT&&... args) const
+inline void Signal<ArgsT...>::operator()(ArgsT... args) const
 {
-    emit(std::forward<ArgsT>(args)...);
+    emit(args...);
 }
 
 template<typename... ArgsT>
