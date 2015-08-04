@@ -5,20 +5,8 @@ project(Zycore)
 option(ZYCORE_FORCE_SHARED_CRT "Forces shared linkage against the CRT" FALSE)
 option(ZYCORE_HEADER_ONLY "Configure for header-only library usage" FALSE)
 
-if (NOT CONFIGURED_ONCE)
-    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
-            "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        set(compiler_specific "-Werror")
-        set(compiler_specific_cxx "-std=c++14")
-    elseif (MSVC)
-        set(compiler_specific "/WX /W4 /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS /GR-")
-    endif ()
-
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${compiler_specific} ${compiler_specific_cxx}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${compiler_specific}"
-        CACHE STRING "Flags used by the compiler during all build types." FORCE)
-endif ()
+option(ZYCORE_DEV "Enable ZyCore development mode (warnings -> errors, ...)" FALSE)
+mark_as_advanced(ZYCORE_DEV)
 
 if (ZYCORE_HEADER_ONLY)
     add_definitions("-DZYCORE_HEADER_ONLY=1")
@@ -70,6 +58,22 @@ if (ZYCORE_HEADER_ONLY)
 else ()
     add_library("Zycore" ${headers} ${sources})
     include_directories("include/")
-endif ()
 
-set(CONFIGURED_ONCE TRUE CACHE INTERNAL "CMake has configured at least once.")
+    if ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU" OR
+            "${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
+        set(initial_compile_flags "-std=c++14")
+        if (ZYCORE_DEV)
+            set(initial_compile_flags "${initial_compile_flags} -Werror")
+        endif ()
+    elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "MSVC")
+        set(initial_compile_flags "/W4 /D_CRT_SECURE_NO_WARNINGS /D_SCL_SECURE_NO_WARNINGS /GR-")
+        if (ZYCORE_DEV)
+            set(initial_compile_flags "${initial_compile_flags} /WX")
+        endif ()
+    endif ()
+
+    set(ZYCORE_COMPILE_FLAGS "${initial_compile_flags}"
+        CACHE STRING "Flags used when compiling the ZyCore library.")
+    mark_as_advanced(ZYCORE_COMPILE_FLAGS)
+    set_target_properties("Zycore" PROPERTIES COMPILE_FLAGS "${ZYCORE_COMPILE_FLAGS}")
+endif ()
