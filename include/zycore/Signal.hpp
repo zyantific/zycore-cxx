@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_SIGNAL_HPP_
-#define _ZYCORE_SIGNAL_HPP_
+#ifndef ZYCORE_SIGNAL_HPP
+#define ZYCORE_SIGNAL_HPP
 
 #include "zycore/Utils.hpp"
 
@@ -443,4 +443,4 @@ inline void Signal<ArgsT...>::onSlotsObjectDestroyed(SlotHandle handle)
 
 } // namespace zycore
 
-#endif // _ZYCORE_SIGNAL_HPP_
+#endif // ZYCORE_SIGNAL_HPP

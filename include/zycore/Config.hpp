@@ -22,8 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_CONFIG_HPP_
-#define _ZYCORE_CONFIG_HPP_
+#ifndef ZYCORE_CONFIG_HPP
+#define ZYCORE_CONFIG_HPP
 
 // ============================================================================================== //
 // Compiler detection                                                                             //
@@ -111,4 +111,4 @@
 
 // ============================================================================================== //
 
-#endif // _ZYCORE_CONFIG_HPP_
+#endif // ZYCORE_CONFIG_HPP

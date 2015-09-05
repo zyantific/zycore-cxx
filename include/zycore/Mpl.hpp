@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_TMP_HPP_
-#define _ZYCORE_TMP_HPP_
+#ifndef ZYCORE_TMP_HPP
+#define ZYCORE_TMP_HPP
 
 #include <type_traits>
 
@@ -206,4 +206,4 @@ public:
 } // namespace mpl
 } // namespace zycore
 
-#endif // _ZYCORE_TMP_HPP_
+#endif // ZYCORE_TMP_HPP

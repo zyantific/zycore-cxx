@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_UTILS_HPP_
-#define _ZYCORE_UTILS_HPP_
+#ifndef ZYCORE_UTILS_HPP
+#define ZYCORE_UTILS_HPP
 
 #include <exception> // std::terminate
 #include <cstdint>
@@ -121,4 +121,4 @@ inline void fatalExit(const char* /*why*/)
 
 } // namespace remodel
 
-#endif // _ZYCORE_UTILS_HPP_
+#endif // ZYCORE_UTILS_HPP

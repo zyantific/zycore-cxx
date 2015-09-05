@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_TYPES_HPP_
-#define _ZYCORE_TYPES_HPP_
+#ifndef ZYCORE_TYPES_HPP
+#define ZYCORE_TYPES_HPP
 
 #include <cstdint>
 
@@ -40,4 +40,4 @@ using BigFlags = uint64_t;
 
 } // namespace zycore
 
-#endif // _ZYCORE_TYPES_HPP_
+#endif // ZYCORE_TYPES_HPP

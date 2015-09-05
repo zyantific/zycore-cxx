@@ -22,8 +22,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_EXCEPTIONS_HPP_
-#define _ZYCORE_EXCEPTIONS_HPP_
+#ifndef ZYCORE_EXCEPTIONS_HPP
+#define ZYCORE_EXCEPTIONS_HPP
 
 #include "Config.hpp"
 #include <stdexcept>
@@ -284,4 +284,4 @@ inline ErrorCode OSException::getErrorCode() const
 
 } // namespace zycore
 
-#endif // _ZYCORE_EXCEPTIONS_HPP_
+#endif // ZYCORE_EXCEPTIONS_HPP

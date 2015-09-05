@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_OPTIONAL_HPP_
-#define _ZYCORE_OPTIONAL_HPP_
+#ifndef ZYCORE_OPTIONAL_HPP
+#define ZYCORE_OPTIONAL_HPP
 
 #include "zycore/Utils.hpp"
 #include "zycore/TypeTraits.hpp"
@@ -431,4 +431,4 @@ using Optional = internal::OptionalImpl<T>;
 
 } // namespace zycore
 
-#endif // _ZYCORE_OPTIONAL_HPP_
+#endif // ZYCORE_OPTIONAL_HPP

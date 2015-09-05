@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_SIGNALOBJECT_HPP_
-#define _ZYCORE_SIGNALOBJECT_HPP_
+#ifndef ZYCORE_SIGNALOBJECT_HPP
+#define ZYCORE_SIGNALOBJECT_HPP
 
 #ifdef ZYCORE_HEADER_ONLY
 #   error "This file cannot be used in header-only mode."
@@ -89,4 +89,4 @@ private:
 
 } // namespace zycore
 
-#endif // _ZYCORE_SIGNALOBJECT_HPP_
+#endif // ZYCORE_SIGNALOBJECT_HPP

@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_OPERATORS_HPP_
-#define _ZYCORE_OPERATORS_HPP_
+#ifndef ZYCORE_OPERATORS_HPP
+#define ZYCORE_OPERATORS_HPP
 
 #include "zycore/Types.hpp"
 #include "zycore/TypeTraits.hpp"
@@ -499,4 +499,4 @@ struct ForwardByFlags
 } // namespace operators
 } // namespace zycore
 
-#endif // _ZYCORE_OPERATORS_HPP_
+#endif // ZYCORE_OPERATORS_HPP

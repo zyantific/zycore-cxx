@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_TYPETRAITS_HPP_
-#define _ZYCORE_TYPETRAITS_HPP_
+#ifndef ZYCORE_TYPETRAITS_HPP
+#define ZYCORE_TYPETRAITS_HPP
 
 #include "zycore/Types.hpp"
 #include "zycore/Mpl.hpp"
@@ -378,4 +378,4 @@ using ApplyQualifierStack
 
 } // namespace zycore
 
-#endif // _ZYCORE_TYPETRAITS_HPP_
+#endif // ZYCORE_TYPETRAITS_HPP

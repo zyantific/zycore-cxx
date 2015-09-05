@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_SINGLETON_HPP_
-#define _ZYCORE_SINGLETON_HPP_
+#ifndef ZYCORE_SINGLETON_HPP
+#define ZYCORE_SINGLETON_HPP
 
 #include "zycore/Utils.hpp"
 
@@ -105,4 +105,4 @@ inline bool Singleton<ObjTypeT>::hasInstance()
 
 } // namespace zycore
 
-#endif // _ZYCORE_SINGLETON_HPP_
+#endif // ZYCORE_SINGLETON_HPP

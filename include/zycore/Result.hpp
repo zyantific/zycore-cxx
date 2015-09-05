@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_RESULT_HPP_
-#define _ZYCORE_RESULT_HPP_
+#ifndef ZYCORE_RESULT_HPP
+#define ZYCORE_RESULT_HPP
 
 #include "zycore/Optional.hpp"
 
@@ -251,4 +251,4 @@ public:
 
 } // namespace zycore
 
-#endif // _ZYCORE_RESULT_HPP_
+#endif // ZYCORE_RESULT_HPP

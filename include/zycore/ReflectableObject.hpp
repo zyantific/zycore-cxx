@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_REFLECTABLEOBJECT_HPP_
-#define _ZYCORE_REFLECTABLEOBJECT_HPP_
+#ifndef ZYCORE_REFLECTABLEOBJECT_HPP
+#define ZYCORE_REFLECTABLEOBJECT_HPP
 
 #ifdef ZYCORE_HEADER_ONLY
 #   error "This file cannot be used in header-only mode."
@@ -111,4 +111,4 @@ inline const std::vector<PropertyBase*>& ReflectableObject::properties() const
 
 } // namespace zycore
 
-#endif // _ZYCORE_REFLECTABLEOBJECT_HPP_
+#endif // ZYCORE_REFLECTABLEOBJECT_HPP

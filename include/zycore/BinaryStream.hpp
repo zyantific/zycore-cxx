@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_BINARYSTREAM_HPP_
-#define _ZYCORE_BINARYSTREAM_HPP_
+#ifndef ZYCORE_BINARYSTREAM_HPP
+#define ZYCORE_BINARYSTREAM_HPP
 
 #ifdef ZYCORE_HEADER_ONLY
 #   error "This file cannot be used in header-only mode."
@@ -558,4 +558,4 @@ void OBinaryStream::rawWrite(StreamOffs pos, const T& data)
 
 } // namespace zycore
 
-#endif // _ZYCORE_BINARYSTREAM_HPP_
+#endif // ZYCORE_BINARYSTREAM_HPP

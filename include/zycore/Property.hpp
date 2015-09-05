@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef _ZYCORE_PROPERTY_HPP_
-#define _ZYCORE_PROPERTY_HPP_
+#ifndef ZYCORE_PROPERTY_HPP
+#define ZYCORE_PROPERTY_HPP
 
 #ifdef ZYCORE_HEADER_ONLY
 #   error "This file cannot be used in header-only mode."
@@ -496,4 +496,4 @@ namespace internal
 
 } // namespace zycore
 
-#endif // _ZYCORE_PROPERTY_HPP_
+#endif // ZYCORE_PROPERTY_HPP
