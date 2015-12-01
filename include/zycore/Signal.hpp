@@ -225,13 +225,20 @@ public: // Public interface.
      * @param   connection The connection to be added. The pointer will be 
      *                     stolen.
      */
-    void connect(FuncConnection<ArgsT...>* connection);
+    SlotHandle connect(FuncConnection<ArgsT...>* connection);
 
     /**
      * @brief   Connects a static slot to the signal.
      * @param   func The function/lambda to connect.
      */
-    void connect(typename FuncConnection<ArgsT...>::Function func);
+    SlotHandle connect(typename FuncConnection<ArgsT...>::Function func);
+
+    /**
+     * @brief   Disconnects an existing connetion by it's handle
+     * @param   handle  The connection handle.
+     * @return  `true` on success, `false` if the connection didn't exist.
+     */
+    bool disconnect(SlotHandle handle);
 
     /**
      * @brief   Emits the signal and calls all connected slots.
@@ -256,10 +263,11 @@ public: // Public interface.
      * @param   connection The connection to be added. Ownership is transfered.
      */
     template<typename Object>
-    void connect(LifetimedConnection<Object, ArgsT...>* connection)
+    SlotHandle connect(LifetimedConnection<Object, ArgsT...>* connection)
     {
         std::lock_guard<std::recursive_mutex> lock(m_mutex);
-        m_slots.emplace(m_IdCtr++, connection);
+        m_slots.emplace(m_IdCtr, connection);
+        return m_IdCtr++;
     }
 
     /**
@@ -271,12 +279,13 @@ public: // Public interface.
      * The connection is automatically released as soon as either the signal or the
      * lifetime-giver is destroyed.
      */
-    void connect(SignalObject* lifetimeGiver, std::function<void(ArgsT...)> func)
+    SlotHandle connect(SignalObject* lifetimeGiver, std::function<void(ArgsT...)> func)
     {
         std::lock_guard<std::recursive_mutex> lock(m_mutex);
         SlotHandle handle = m_IdCtr++;
         m_slots.emplace(handle, new LifetimedConnection<ArgsT...>(
             lifetimeGiver, func, this, handle));
+        return handle;
     }
 
     /**
@@ -288,11 +297,11 @@ public: // Public interface.
      * with the slot is destroyed.
      */
     template<typename ObjectT>
-    void connect(ObjectT* object, void(ObjectT::*member)(ArgsT...))
+    SlotHandle connect(ObjectT* object, void(ObjectT::*member)(ArgsT...))
     {
         static_assert(std::is_base_of<SignalObject, ObjectT>::value,
             "type has to be derived from SignalObject");
-        connect(object, internal::MemberFuncBinding<ObjectT, ArgsT...>(object, member));
+        return connect(object, internal::MemberFuncBinding<ObjectT, ArgsT...>(object, member));
     }
 private: // Interface for SignalObject.
     /**
@@ -323,8 +332,8 @@ inline void FuncConnection<ArgsT...>::call(ArgsT... args) const
 template<typename... ArgsT>
 inline LifetimedConnection<ArgsT...>::LifetimedConnection(internal::SignalObjectBase *lifetimeObj, 
         Function func, internal::SignalBase* sig, SlotHandle handle)
-    : m_lifetimeObject(lifetimeObj)
-    , m_func(func)
+    : m_func(func)
+    , m_lifetimeObject(lifetimeObj)
 {
     lifetimeObj->onSignalConnected(sig, handle);
 }
@@ -383,18 +392,32 @@ inline Signal<ArgsT...>::~Signal()
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::connect(FuncConnection<ArgsT...>* connection)
+inline SlotHandle Signal<ArgsT...>::connect(FuncConnection<ArgsT...>* connection)
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
-    m_slots.emplace(m_IdCtr++, connection);
+    m_slots.emplace(m_IdCtr, connection);
+    return m_IdCtr++;
 }
 
 template<typename... ArgsT>
-inline void Signal<ArgsT...>::connect(typename FuncConnection<ArgsT...>::Function func)
+inline bool Signal<ArgsT...>::disconnect(SlotHandle handle)
+{
+    std::lock_guard<std::recursive_mutex> lock(m_mutex);
+    auto it = m_slots.find(handle);
+    if (it == m_slots.end()) return false;
+    it->second->onDestroy(it->first);
+    delete it->second;
+    m_slots.erase(it);
+    return true;
+}
+
+template<typename... ArgsT>
+inline SlotHandle Signal<ArgsT...>::connect(typename FuncConnection<ArgsT...>::Function func)
 {
     std::lock_guard<std::recursive_mutex> lock(m_mutex);
     auto connection = new FuncConnection<ArgsT...>(func);
-    m_slots.emplace(m_IdCtr++, connection);
+    m_slots.emplace(m_IdCtr, connection);
+    return m_IdCtr++;
 }
 
 template<typename... ArgsT>
