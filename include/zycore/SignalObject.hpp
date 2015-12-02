@@ -74,15 +74,16 @@ private:
     void destroy();
     /**
      * @brief   Called when a signal is disconnected from one of our slots.
-     * @param   signal  The signal we are connected to.
-     * @param   handle  The slot handle which has been assigned to the object.
+     * @param   signal The signal we are connected to.
+     * @param   handle The slot handle which has been assigned to the object.
      */
     void onSignalConnected(internal::SignalBase* signal, SlotHandle handle) override;
     /**
      * @brief   Called when a signal is disconnected from one of our slots.
+     * @param   signal The signal to disconnect from.
      * @param   handle The slot handle of the connection to be removed.
      */
-    void onSignalDisconnected(SlotHandle handle) override;
+    void onSignalDisconnected(internal::SignalBase* signal, SlotHandle handle) override;
 };
 
 // ============================================================================================== //

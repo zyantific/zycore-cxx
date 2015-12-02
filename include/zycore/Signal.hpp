@@ -58,7 +58,7 @@ namespace internal
 
         virtual ~SignalObjectBase() = default;
         virtual void onSignalConnected(SignalBase *signal, SlotHandle handle) = 0;
-        virtual void onSignalDisconnected(SlotHandle handle) = 0;
+        virtual void onSignalDisconnected(SignalBase *signal, SlotHandle handle) = 0;
     };
 } // namespace internal
 
@@ -148,6 +148,7 @@ public:
     using Function = std::function<void(ArgsT...)>;
 private:
     Function m_func;
+    internal::SignalBase* m_signal;
     internal::SignalObjectBase* m_lifetimeObject;
 public: // Constructor
     /**
@@ -333,6 +334,7 @@ template<typename... ArgsT>
 inline LifetimedConnection<ArgsT...>::LifetimedConnection(internal::SignalObjectBase *lifetimeObj, 
         Function func, internal::SignalBase* sig, SlotHandle handle)
     : m_func(func)
+    , m_signal(sig)
     , m_lifetimeObject(lifetimeObj)
 {
     lifetimeObj->onSignalConnected(sig, handle);
@@ -347,7 +349,7 @@ inline void LifetimedConnection<ArgsT...>::call(ArgsT... args) const
 template<typename... ArgsT>
 inline void LifetimedConnection<ArgsT...>::onDestroy(SlotHandle handle)
 {
-    m_lifetimeObject->onSignalDisconnected(handle);
+    m_lifetimeObject->onSignalDisconnected(m_signal, handle);
 }
 
 // ============================================================================================== //

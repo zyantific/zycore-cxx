@@ -53,13 +53,13 @@ void SignalObject::onSignalConnected(internal::SignalBase *signal, SlotHandle ha
     m_connectedSignals.emplace_back(handle, signal);
 }
 
-void SignalObject::onSignalDisconnected(SlotHandle handle)
+void SignalObject::onSignalDisconnected(internal::SignalBase *signal, SlotHandle handle)
 {
     std::lock_guard<std::recursive_mutex> lock(m_objectMutex);
     m_connectedSignals.erase(std::remove_if(m_connectedSignals.begin(), m_connectedSignals.end(),
         [&](const decltype(*m_connectedSignals.data())& element) -> bool
     {
-        return std::get<0>(element) == handle;
+        return std::get<0>(element) == handle && std::get<1>(element) == signal;
     }));
 }
 
