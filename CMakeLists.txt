@@ -24,9 +24,10 @@ if (MSVC AND NOT ZYCORE_FORCE_SHARED_CRT)
         CMAKE_C_FLAGS_MINSIZEREL
         CMAKE_C_FLAGS_RELEASE
         CMAKE_C_FLAGS_RELWITHDEBINFO)
-    foreach (cur_var ${manipulated_vars})
-        string(REPLACE "/MD" "/MT" ${cur_var} "${${cur_var}}")
-    endforeach ()
+    foreach(cur_var ${manipulated_vars})
+        string(REPLACE "/MD" "/MT" new_var "${${cur_var}}")
+        set(${cur_var} ${new_var} CACHE STRING "" FORCE)
+    endforeach()
 endif ()
 
 # Library
